@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#ffd9e7">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Nông Trại Mơ Ước</title>
+<style>
+:root{--pink:#ffd9e7;--cream:#fff8e9;--green:#9bd7a1;--dark:#42544b;--brown:#98765b}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,sans-serif;color:var(--dark);background:linear-gradient(#c9efff,#fff2dc);min-height:100vh}
+header{padding:14px 16px;background:#fff9;border-bottom:3px solid #fff;position:sticky;top:0;z-index:2}
+h1{font-size:22px;margin:0}header p{margin:3px 0 0;font-size:13px}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pill{background:#fff;padding:7px 10px;border-radius:16px;font-weight:700;font-size:13px}
+main{max-width:760px;margin:auto;padding:12px}.scene{position:relative;overflow:hidden;border:4px solid white;border-radius:22px;background:linear-gradient(#9de0ff 0 45%,#a8df9c 45%);height:330px;box-shadow:0 5px 0 #b6d9b7}
+.sun{position:absolute;right:28px;top:22px;font-size:38px}.cloud{position:absolute;top:32px;left:20px;font-size:35px}
+.hill{position:absolute;bottom:0;left:-5%;width:110%;height:120px;background:#80c987;border-radius:50% 50% 0 0}
+.path{position:absolute;bottom:-30px;left:35%;width:34%;height:160px;background:#f5d7a4;transform:rotate(-12deg);border-radius:50%}
+.house{position:absolute;left:8%;bottom:80px;font-size:68px;filter:drop-shadow(0 3px 0 #fff)}
+.shop{position:absolute;right:8%;bottom:70px;font-size:57px}
+.crop{position:absolute;font-size:30px;bottom:48px}.c1{left:35%}.c2{left:44%}.c3{left:53%}.c4{left:62%}
+.player{position:absolute;left:49%;bottom:98px;font-size:39px;transition:left .2s,bottom .2s;z-index:1}
+.npc{position:absolute;right:28%;bottom:106px;font-size:34px}
+.bubble{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#fff;padding:6px 10px;border-radius:14px;font-size:12px;max-width:90%;text-align:center}
+.panel{background:#fffdf4;border:3px solid white;border-radius:20px;padding:13px;margin-top:12px;box-shadow:0 4px 0 #eadbc9}
+h2{font-size:17px;margin:0 0 9px}.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+button{border:0;border-radius:14px;padding:11px 8px;background:var(--pink);color:#694a5a;font-weight:700;font-size:14px;box-shadow:0 3px 0 #edb8cc;cursor:pointer}
+button.green{background:#c9efc8;box-shadow:0 3px 0 #9acb98}button.blue{background:#d6edff;box-shadow:0 3px 0 #add5ee}
+.log{font-size:13px;line-height:1.55;max-height:110px;overflow:auto;background:#fff;padding:8px;border-radius:12px}
+.move{display:flex;justify-content:center;gap:8px;margin-top:8px}.move button{min-width:55px}
+small{color:#7d8e83}
+</style>
+</head>
+<body>
+<header><h1>🌷 Nông Trại Mơ Ước</h1><p>Thế giới anime dễ thương của riêng bạn</p><div class="stats"><span class="pill">🪙 Xu: <b id="coins">100</b></span><span class="pill">⭐ Cấp: <b id="level">1</b></span><span class="pill">🌱 Cây trồng: <b id="plants">0</b></span><span class="pill">💗 Bạn bè: <b id="friends">0</b></span></div></header>
+<main>
+<div class="scene" id="scene"><span class="sun">☀️</span><span class="cloud">☁️</span><div class="hill"></div><div class="path"></div><div class="house">🏡</div><div class="shop">🏪</div><div class="player" id="player">👩🏻‍🌾</div><div class="npc" id="npc">🐰</div><div class="crop c1" id="crop1">🌱</div><div class="crop c2" id="crop2">🌱</div><div class="crop c3" id="crop3">🌱</div><div class="crop c4" id="crop4">🌱</div><div class="bubble" id="bubble">Chào mừng đến nông trại! Chạm bản đồ để di chuyển ✨</div></div>
+<div class="move"><button onclick="move(-1)">⬅️</button><button onclick="move(1)">➡️</button><button onclick="jump()">⬆️ Nhảy</button></div>
+<div class="panel"><h2>🌿 Hoạt động nông trại</h2><div class="actions"><button class="green" onclick="plant()">🌱 Gieo hạt (10 xu)</button><button class="green" onclick="harvest()">🥕 Thu hoạch</button><button onclick="sell()">🧺 Bán nông sản</button><button class="blue" onclick="shop()">🛍️ Cửa hàng</button><button onclick="hire()">👩‍🌾 Thuê nhân viên</button><button onclick="talk()">🐰 Nói chuyện với Momo</button><button onclick="explore()">🌳 Khám phá khu rừng</button><button onclick="saveGame()">💾 Lưu trò chơi</button></div></div>
+<div class="panel"><h2>📜 Nhật ký</h2><div class="log" id="log">Ngày đầu tiên ở nông trại! Hãy gieo hạt và chăm sóc khu vườn nhé.</div><p><small>Phiên bản demo ngoại tuyến. Tiến trình được lưu trên trình duyệt của thiết bị.</small></p></div>
+</main>
+<script>
+let coins=100,level=1,plants=0,ready=0,friends=0,staff=0,x=49,logs=[];
+const $=id=>document.getElementById(id);
+function say(t){$('bubble').textContent=t;logs.unshift('• '+t);$('log').innerHTML=logs.slice(0,8).join('<br>');}
+function update(){$('coins').textContent=coins;$('level').textContent=level;$('plants').textContent=plants;$('friends').textContent=friends;}
+function move(d){x=Math.max(5,Math.min(90,x+d*7));$('player').style.left=x+'%';say('Bạn đang dạo quanh nông trại 🌼');}
+function jump(){$('player').style.bottom='145px';setTimeout(()=>$('player').style.bottom='98px',350);say('Nhảy lên nào! ✨');}
+$('scene').addEventListener('click',e=>{let r=$('scene').getBoundingClientRect();x=Math.max(3,Math.min(90,(e.clientX-r.left)/r.width*100));$('player').style.left=x+'%';say('Bạn đã đi đến vị trí mới!');});
+function plant(){if(coins<10){say('Bạn chưa đủ xu mua hạt giống.');return}if(plants>=4){say('Vườn đã đầy, hãy thu hoạch trước nhé!');return}coins-=10;plants++;let id='crop'+plants;$(id).textContent='🌱';say('Đã gieo hạt! Chờ 8 giây để cây lớn.');update();setTimeout(()=>{if($(id)){$(id).textContent='🥕';ready++;say('Một cây đã lớn, có thể thu hoạch! 🌟')}},8000);}
+function harvest(){if(ready<=0){say('Chưa có cây chín. Hãy chờ thêm một chút nhé!');return}ready--;plants=Math.max(0,plants-1);coins+=25;level=Math.floor((coins+plants*10)/150)+1;let crops=['crop1','crop2','crop3','crop4'];for(let id of crops){if($(id).textContent==='🥕'){$(id).textContent='🌱';break}}say('Thu hoạch thành công! +25 xu 🥕');update();}
+function sell(){say('Bạn mang nông sản ra quầy bán. Hãy trồng và thu hoạch để kiếm xu nhé!');}
+function shop(){if(coins>=20){coins-=20;say('Bạn mua được phân bón lấp lánh! Cây trồng sẽ thật vui 🌱')}else say('Cửa hàng: cần 20 xu để mua phân bón.');update();}
+function hire(){if(staff){say('Nhân viên Mi đang chăm vườn rất chăm chỉ!');return}if(coins<50){say('Thuê nhân viên cần 50 xu. Hãy bán nông sản trước nhé!');return}coins-=50;staff=1;say('Bạn đã thuê Mi làm nhân viên bán hàng! 👩‍🌾');update();}
+function talk(){friends++;say('Momo: “Nông trại của bạn thật đáng yêu! 💗” Tình bạn +1');update();}
+function explore(){say('Bạn đến khu rừng phép thuật và tìm thấy một chiếc lá may mắn! 🍀');coins+=5;update();}
+function saveGame(){localStorage.setItem('nongTraiSave',JSON.stringify({coins,level,plants,ready,friends,staff,x}));say('Đã lưu tiến trình trên thiết bị này 💾');}
+try{let s=JSON.parse(localStorage.getItem('nongTraiSave'));if(s){({coins,level,plants,ready,friends,staff,x}=s);$('player').style.left=x+'%';update();say('Đã tải lại tiến trình của bạn!')}}catch(e){}
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>

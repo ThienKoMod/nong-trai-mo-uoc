@@ -1,0 +1,9 @@
+{
+  "name": "Nông Trại Mơ Ước",
+  "short_name": "Nông Trại",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff2dc",
+  "theme_color": "#ffd9e7",
+  "description": "Game nông trại anime dễ thương"
+}
